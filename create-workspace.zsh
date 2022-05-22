@@ -28,7 +28,12 @@ else
    export is_private_workspace="false"
 fi
 
-git_user=`git config user.email`
+git_user=`git config github.user`
+if [[ -z ${git_user} ]]; then
+   echo -n "Github username: "
+   read git_user
+   git config github.user ${git_user}
+fi	
 
 # Invoke Github admin api 
 curl -X POST -H "Accept: application/vnd.github.v3+json" -u ${git_user}:${github_automation_key} https://api.github.com/user/repos -d "{\"name\": \"${workspace_name}\",\"description\": \"${workspace_descrition}\",\"private\": ${is_private_workspace},\"has_issues\": true,\"has_downloads\": true,\"has_wiki\": false}"
