@@ -40,10 +40,18 @@ curl -X POST -H "Accept: application/vnd.github.v3+json" -u ${git_user}:${github
 echo ""
 echo "Remote repo created for ${workspace_name}"
 
+# Crate local workspace
 mkdir ${parent_dir}/${workspace_name}
 cd ${parent_dir}/${workspace_name}
 git init
 git branch -M main
-git remote add origin https://${github_automation_key}@github.com/${git_user}/${workspace_name}.git
+git remote add origin git@github.com:${git_user}/${workspace_name}.git
 git push -u origin master
 echo "Local workspace created at ${parent_dir}/${workspace_name}"
+
+# Schedule for periodic sync
+if [[ -f ${git_repo_log} ]]; then
+   echo "git@github.com:${git_user}/${workspace_name}.git" >> ${git_repo_log}
+   echo "Added https://github.com/${git_user}/${workspace_name}.git to ${git_repo_log}"
+fi	
+
